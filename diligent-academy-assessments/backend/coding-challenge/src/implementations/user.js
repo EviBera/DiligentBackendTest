@@ -5,13 +5,11 @@ export class User {
 
     borrow(book, library) {
         try {
-            let booksInLibrary = library.getBooks();
-
-            if (booksInLibrary.indexOf(book) === -1) {
-                console.log("The book is not in the library.");
-            } else {
+            if (library.getBooks().includes(book)) {
                 this.books.push(book);
                 library.removeBook(book);
+            } else {
+                console.log("The book is not in the library.");
             }
         }
         catch (err) {
@@ -21,7 +19,7 @@ export class User {
 
     hasBook(book) {
         try {
-            return this.books.indexOf(book) >= 0;
+            return this.books.includes(book);
         }
         catch (err) {
             console.error("Unexpected error: " + err);
@@ -30,12 +28,12 @@ export class User {
 
     return(book, library) {
         try {
-            if (this.books.indexOf(book) < 0) {
-                return false;
-            } else {
+            if (this.hasBook(book)) {
                 this.books = this.books.filter(b => b !== book);
                 library.addBook(book);
                 return true;
+            } else {
+                return false;
             }
         }
         catch (err) {
@@ -45,11 +43,7 @@ export class User {
 
     getBookNames() {
         try {
-            let bookNames = [];
-            this.books.forEach(book => {
-                bookNames.push(book.name);
-            });
-            return bookNames;
+            return this.books.map(book => book.name);
         }
         catch (err) {
             console.error("Unexpected error: " + err);
